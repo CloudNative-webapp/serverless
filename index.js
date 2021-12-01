@@ -42,18 +42,20 @@ exports.handler = (event, context, callback) => {
 
             if (record.Item == null || record.Item == undefined) {
                 isPresent = false;
-            } else {
-                if(record.Item.ttl < Math.floor(Date.now() / 1000)){
-                    isPresent = false;
-                    console.log('inside ttl',isPresent);
-                }   
-                else{
-                    isPresent = true;
-                    console.log('inside ttl and about to send mail',isPresent);
-                    sendEmail(message);
-                }
-                    
+                sendEmail(message);
             }
+            // } else {
+            //     if(record.Item.ttl < Math.floor(Date.now() / 1000)){
+            //         isPresent = false;
+            //         console.log('inside ttl',isPresent);
+            //     }   
+            //     else{
+            //         isPresent = true;
+            //         console.log('inside ttl and about to send mail',isPresent);
+            //         sendEmail(message);
+            //     }
+                    
+            // }
 
             // if(!isPresent) {
             //     const current = Math.floor(Date.now() / 1000)
