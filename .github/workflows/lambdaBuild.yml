@@ -19,7 +19,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   Lambda:
-  runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [ 14.x ]
@@ -60,5 +60,5 @@ jobs:
           
       - name: Call to Lambda for Updating Function
         run: |
-          aws lambda update-function-code --function-name lambda_email_updates --region us-east-1 --zip-file fileb://${{ env.ARTIFACT_NAME }}
+          aws lambda update-function-code --function-name lambda_function_send_email --region us-east-1 --zip-file fileb://${{ env.ARTIFACT_NAME }}
 
