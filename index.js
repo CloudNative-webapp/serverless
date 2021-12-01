@@ -24,62 +24,63 @@ exports.handler = (event, context, callback) => {
             "one-time-token": HASH
         }
     };
+    sendEmail(message);
 
     console.log("Checking if record already present in DB!!");
 
-    DynamoDB.get(searchParams, function(error, record){
+//     DynamoDB.get(searchParams, function(error, record){
         
-        if(error) {
+//         if(error) {
 
-            console.log("Error in DynamoDB get method ",error);
+//             console.log("Error in DynamoDB get method ",error);
 
-        } else {
+//         } else {
 
-            console.log("Success in get method dynamoDB", record);
-            console.log(JSON.stringify(record));
-            let isPresent = false;
+//             console.log("Success in get method dynamoDB", record);
+//             console.log(JSON.stringify(record));
+//             let isPresent = false;
 
-            if (record.Item == null || record.Item == undefined) {
-                isPresent = false;
-            } else {
-                if(record.Item.ttl < Math.floor(Date.now() / 1000))
-                    isPresent = false;
-                else
-                    isPresent = true;
-                    sendEmail(message);
-            }
+//             if (record.Item == null || record.Item == undefined) {
+//                 isPresent = false;
+//             } else {
+//                 if(record.Item.ttl < Math.floor(Date.now() / 1000))
+//                     isPresent = false;
+//                 else
+//                     isPresent = true;
+//                     sendEmail(message);
+//             }
 
-            // if(!isPresent) {
-            //     const current = Math.floor(Date.now() / 1000)
-            //     let ttl = 60 * 5
-            //     const expiresIn = ttl + current
-            //     const params = {
-            //         Item: {
-            //             hash_value: HASH,
-            //             ttl: expiresIn,
-            //         },
-            //         TableName: "dynamodb-table"
-            //     }
+//             // if(!isPresent) {
+//             //     const current = Math.floor(Date.now() / 1000)
+//             //     let ttl = 60 * 5
+//             //     const expiresIn = ttl + current
+//             //     const params = {
+//             //         Item: {
+//             //             hash_value: HASH,
+//             //             ttl: expiresIn,
+//             //         },
+//             //         TableName: "dynamodb-table"
+//             //     }
 
-            //     DynamoDB.put(params, function (error, data) {
-            //         if (error){
-            //             console.log("Error in putting item in DynamoDB ", error);
-            //         } 
-            //         else {
-            //             sendEmail(message, question, answer);
-            //         }
-            //     });
+//             //     DynamoDB.put(params, function (error, data) {
+//             //         if (error){
+//             //             console.log("Error in putting item in DynamoDB ", error);
+//             //         } 
+//             //         else {
+//             //             sendEmail(message, question, answer);
+//             //         }
+//             //     });
                 
-            // } else {
-            //     console.log("Item already present. No email sent!");
-            // }
-        }
-    })
-};
+//             // } else {
+//             //     console.log("Item already present. No email sent!");
+//             // }
+//         }
+//     })
+// };
 
 var sendEmail = (data) => {
 
-    let link = `http://${data.domainName}/v1/verifyUserEmail?email=${data.username}&token=${HASH}`;
+    let link = `http://${data.domainName}/v1/verifyUserEmail?email=${data.username}&token=${data.token}`;
 
     let body = "Hello "+ data.first_name +",\n\n"+
     "You registered an account on our application, before being able to use your account you need to verify that this is your email address by clicking here:" +"\n\n\n"+
