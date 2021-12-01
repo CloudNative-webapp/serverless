@@ -43,11 +43,16 @@ exports.handler = (event, context, callback) => {
             if (record.Item == null || record.Item == undefined) {
                 isPresent = false;
             } else {
-                if(record.Item.ttl < Math.floor(Date.now() / 1000))
+                if(record.Item.ttl < Math.floor(Date.now() / 1000)){
                     isPresent = false;
-                else
+                    console.log('inside ttl',isPresent);
+                }   
+                else{
                     isPresent = true;
+                    console.log('inside ttl and about to send mail',isPresent);
                     sendEmail(message);
+                }
+                    
             }
 
             // if(!isPresent) {
