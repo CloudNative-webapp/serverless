@@ -17,6 +17,7 @@ exports.handler = (event, context, callback) => {
     // let SHA= crypt.createHash('sha256');
     // SHA.update(username+token);
     let HASH = message.token;
+    let verifyMsg = message.verify;
 
     let searchParams = {
         TableName: "dynamodb-table",
@@ -40,8 +41,11 @@ exports.handler = (event, context, callback) => {
             console.log(JSON.stringify(record));
             let isPresent = false;
 
-            if (record.Item == null || record.Item == undefined) {
-                isPresent = false;
+            // if (record.Item == null || record.Item == undefined) {
+            //     isPresent = false;
+            //     sendEmail(message);
+            // }
+            if(!verifyMsg){
                 sendEmail(message);
             }
             // } else {
