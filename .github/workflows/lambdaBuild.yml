@@ -1,0 +1,64 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build and Deploy for Serverless app
+
+env:
+  ARTIFACT_NAME: lambda_function_payload.zip
+  AWS_REGION: us-east-1
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  Lambda:
+  runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 14.x ]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y zip unzip
+          npm install crypto
+          npm install dotenv
+
+      - name: Build Deployment Artifact
+        run: |
+          touch .env
+          echo 'DOMAIN='${{ secrets.DOMAIN }}'' >> .env
+          cat .env
+          zip -r ${{ env.ARTIFACT_NAME }} index.js .env
+          
+      - name: Configuring AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Copy Artifact to S3
+        run: |
+          aws s3 cp ${{ env.ARTIFACT_NAME }} s3://${{ secrets.LAMBDA_BUCKET }}/${{ env.ARTIFACT_NAME }}
+          
+          
+      - name: Call to Lambda for Updating Function
+        run: |
+          aws lambda update-function-code --function-name lambda_email_updates --region us-east-1 --zip-file fileb://${{ env.ARTIFACT_NAME }}
+
