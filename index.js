@@ -18,6 +18,7 @@ exports.handler = (event, context, callback) => {
     // SHA.update(username+token);
     let HASH = message.token;
     let verifyMsg = message.verify;
+    console.log('verify email',verifyMsg)
 
     let searchParams = {
         TableName: "dynamodb-table",
@@ -46,6 +47,7 @@ exports.handler = (event, context, callback) => {
             //     sendEmail(message);
             // }
             if(!verifyMsg){
+                console.log('in if loop of verify')
                 sendEmail(message);
             }
             // } else {
