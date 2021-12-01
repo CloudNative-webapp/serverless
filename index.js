@@ -3,7 +3,7 @@ var crypt = require('crypto');
 var ses = new aws.SES({ region: "us-east-1" });
 var DynamoDB = new aws.DynamoDB.DocumentClient();
 
-require('dotenv').config();
+// require('dotenv').config();
 
 exports.handler = (event, context, callback) => {
 
