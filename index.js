@@ -109,3 +109,4 @@ var sendEmail = (data) => {
             console.error(err, err.stack);
         });
 }
+}
