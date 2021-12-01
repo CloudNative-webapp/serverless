@@ -77,7 +77,7 @@ exports.handler = (event, context, callback) => {
 //         }
 //     })
 // };
-
+}
 var sendEmail = (data) => {
 
     let link = `http://${data.domainName}/v1/verifyUserEmail?email=${data.username}&token=${data.token}`;
@@ -109,4 +109,4 @@ var sendEmail = (data) => {
             console.error(err, err.stack);
         });
 }
-}
+
